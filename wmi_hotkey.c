@@ -6,6 +6,9 @@
 #include <linux/acpi.h>
 //#include <linux/rfkill.h>
 #include <linux/string.h>
+#include <linux/proc_fs.h>
+#include <linux/seq_file.h>
+
 
 
 MODULE_LICENSE("GPL"); 
@@ -16,8 +19,27 @@ MODULE_DESCRIPTION("A simple wmi!");
 
 MODULE_VERSION("0.1"); 
 
+char hotkey[5];
 
 #define EEEPC_WMI_EVENT_GUID "ABBC0F72-8EA1-11D1-00A0-C90629100000"
+
+static int hotkey_proc_show(struct seq_file *m, void *v) {
+	  seq_printf(m, "%s",hotkey);
+	    return 0;
+}
+
+static int hotkey_proc_open(struct inode *inode, struct  file *file) {
+	  return single_open(file, hotkey_proc_show, NULL);
+}
+
+static const struct file_operations hotkey_proc_fops = {
+	  .owner = THIS_MODULE,
+	  .open = hotkey_proc_open,
+	   .read = seq_read,
+	   .llseek = seq_lseek,
+           .release = single_release,
+};
+
 
 static void eeepc_wmi_notify(u32 value, void *context)
     {
@@ -50,7 +72,8 @@ static int __init hello_start(void)
  
 	printk(KERN_INFO "Loading hello module...\n"); 
 	printk(KERN_INFO "Hello world\n"); 
-
+        
+	proc_create("wmi-hotkey", 0, NULL, &hotkey_proc_fops);
 
         if (!wmi_has_guid(EEEPC_WMI_EVENT_GUID)) {
 	    printk("No known WMI GUID found\n");
@@ -69,7 +92,8 @@ static int __init hello_start(void)
 static void __exit hello_end(void) 
 { 
 	printk(KERN_INFO "Goodbye Mr.\n"); 
-       wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
+        remove_proc_entry("wmi-hotkey",NULL);
+	wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
 } 
 
 module_init(hello_start); 
