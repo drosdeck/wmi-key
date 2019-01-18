@@ -8,8 +8,7 @@
 #include <linux/string.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
-
-
+#include <linux/moduleparam.h>
 
 MODULE_LICENSE("GPL"); 
 
@@ -20,6 +19,7 @@ MODULE_DESCRIPTION("A simple wmi!");
 MODULE_VERSION("0.1"); 
 
 char hotkey[5];
+char *my = "blaaa";
 
 #define EEEPC_WMI_EVENT_GUID "ABBC0F72-8EA1-11D1-00A0-C90629100000"
 
