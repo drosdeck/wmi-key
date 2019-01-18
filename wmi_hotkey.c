@@ -23,6 +23,9 @@ char *my = "blaaa";
 
 #define EEEPC_WMI_EVENT_GUID "ABBC0F72-8EA1-11D1-00A0-C90629100000"
 
+module_param(my,charp,0444);
+//MODULE_PARAM_DESC(my,"Teste de strind");
+
 static int hotkey_proc_show(struct seq_file *m, void *v) {
 	  seq_printf(m, "%s",hotkey);
 	    return 0;
