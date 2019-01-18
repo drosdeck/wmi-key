@@ -19,12 +19,12 @@ MODULE_DESCRIPTION("A simple wmi!");
 MODULE_VERSION("0.1"); 
 
 char hotkey[5];
-char *my = "blaaa";
+char *wmi_event_guid = "blaaa";
 
 #define EEEPC_WMI_EVENT_GUID "ABBC0F72-8EA1-11D1-00A0-C90629100000"
 
-module_param(my,charp,0444);
-MODULE_PARM_DESC(my,"Teste de strind");
+module_param(wmi_event_guid,charp,0444);
+MODULE_PARM_DESC(wmi_event_guid,"Teste de strind");
 
 static int hotkey_proc_show(struct seq_file *m, void *v) {
 	  seq_printf(m, "%s",hotkey);
@@ -61,7 +61,8 @@ static void eeepc_wmi_notify(u32 value, void *context)
 
 	if (obj && obj->type == ACPI_TYPE_INTEGER) {
 		code = obj->integer.value;
-               printk("Codigo %d\n",code);
+
+		snprintf(hotkey,5,"%d\n", code);
 	}
 
 	kfree(obj);
@@ -72,13 +73,13 @@ static void eeepc_wmi_notify(u32 value, void *context)
 static int __init hello_start(void) 
 {
 	int status;
-        printk("parametro eeeeeeeeeeeeeeeeee %s",my);
+        printk("parametro eeeeeeeeeeeeeeeeee %s",wmi_event_guid);
 	printk(KERN_INFO "Loading hello module...\n"); 
 	printk(KERN_INFO "Hello world\n"); 
         
 	proc_create("wmi-hotkey", 0, NULL, &hotkey_proc_fops);
 
-        if (!wmi_has_guid(EEEPC_WMI_EVENT_GUID)) {
+        if (!wmi_has_guid(wmi_event_guid)) {
 	    printk("No known WMI GUID found\n");
 	    return -ENODEV;
 	}
