@@ -13,7 +13,7 @@ MODULE_AUTHOR("Edson Juliano Drosdeck");
 
 MODULE_DESCRIPTION("A simple hack to get hotkey code in proc"); 
 
-MODULE_VERSION("0.1"); 
+MODULE_VERSION("1.0"); 
 
 char hotkey[5];
 char *wmi_event_guid = "temp";
@@ -67,7 +67,7 @@ static void eeepc_wmi_notify(u32 value, void *context)
 
 
 
-static int __init hello_start(void) 
+static int __init wmi_hot_key_start(void) 
 {
 	int status;
         
@@ -87,12 +87,12 @@ static int __init hello_start(void)
 	return 0; 
 } 
 
-static void __exit hello_end(void) 
+static void __exit wmi_hot_key_end(void) 
 { 
         remove_proc_entry("wmi-hotkey",NULL);
 	wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
 } 
 
-module_init(hello_start); 
-module_exit(hello_end); 
+module_init(wmi_hot_key_start); 
+module_exit(wmi_hot_key_end); 
 
