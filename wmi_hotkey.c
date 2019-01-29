@@ -1,10 +1,7 @@
-#include <linux/module.h>	 /* Needed by all modules */ 
-#include <linux/kernel.h>	 /* Needed for KERN_INFO */ 
-#include <linux/init.h>	 /* Needed for the macros */ 
-//#include <linux/input/sparse-keymap.h>
-//#include <linux/platform_device.h>
+#include <linux/module.h>	 
+#include <linux/kernel.h>	 
+#include <linux/init.h>	  
 #include <linux/acpi.h>
-//#include <linux/rfkill.h>
 #include <linux/string.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
@@ -14,17 +11,17 @@ MODULE_LICENSE("GPL");
 
 MODULE_AUTHOR("Edson Juliano Drosdeck"); 
 
-MODULE_DESCRIPTION("A simple wmi!"); 
+MODULE_DESCRIPTION("A simple hack to get hotkey code in proc"); 
 
 MODULE_VERSION("0.1"); 
 
 char hotkey[5];
-char *wmi_event_guid = "blaaa";
+char *wmi_event_guid = "temp";
 
 #define EEEPC_WMI_EVENT_GUID "ABBC0F72-8EA1-11D1-00A0-C90629100000"
 
 module_param(wmi_event_guid,charp,0444);
-MODULE_PARM_DESC(wmi_event_guid,"Teste de strind");
+MODULE_PARM_DESC(wmi_event_guid,"wmi-event_guid");
 
 static int hotkey_proc_show(struct seq_file *m, void *v) {
 	  seq_printf(m, "%s",hotkey);
@@ -73,9 +70,6 @@ static void eeepc_wmi_notify(u32 value, void *context)
 static int __init hello_start(void) 
 {
 	int status;
-        printk("parametro eeeeeeeeeeeeeeeeee %s",wmi_event_guid);
-	printk(KERN_INFO "Loading hello module...\n"); 
-	printk(KERN_INFO "Hello world\n"); 
         
 	proc_create("wmi-hotkey", 0, NULL, &hotkey_proc_fops);
 
@@ -95,7 +89,6 @@ static int __init hello_start(void)
 
 static void __exit hello_end(void) 
 { 
-	printk(KERN_INFO "Goodbye Mr.\n"); 
         remove_proc_entry("wmi-hotkey",NULL);
 	wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
 } 
