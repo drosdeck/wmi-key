@@ -41,7 +41,7 @@ static const struct file_operations hotkey_proc_fops = {
 };
 
 
-static void eeepc_wmi_notify(u32 value, void *context)
+static void wmi_hotkey_notify(u32 value, void *context)
     {
 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
 	union acpi_object *obj;
@@ -67,7 +67,7 @@ static void eeepc_wmi_notify(u32 value, void *context)
 
 
 
-static int __init wmi_hot_key_start(void) 
+static int __init wmi_hotkey_start(void) 
 {
 	int status;
         
@@ -78,8 +78,8 @@ static int __init wmi_hot_key_start(void)
 	    return -ENODEV;
 	}
 
-	status = wmi_install_notify_handler(EEEPC_WMI_EVENT_GUID,
-					eeepc_wmi_notify, NULL);
+	status = wmi_install_notify_handler(wmi_event_guid,
+					wmi_hotkey_notify, NULL);
 		if (ACPI_FAILURE(status)) {
 	    	
 		return -ENODEV;
@@ -87,12 +87,12 @@ static int __init wmi_hot_key_start(void)
 	return 0; 
 } 
 
-static void __exit wmi_hot_key_end(void) 
+static void __exit wmi_hotkey_end(void) 
 { 
         remove_proc_entry("wmi-hotkey",NULL);
-	wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
+	wmi_remove_notify_handler(wmi_event_guid);
 } 
 
-module_init(wmi_hot_key_start); 
-module_exit(wmi_hot_key_end); 
+module_init(wmi_hotkey_start); 
+module_exit(wmi_hotkey_end); 
 
