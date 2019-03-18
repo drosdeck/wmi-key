@@ -73,12 +73,12 @@ static int __init wmi_hotkey_start(void)
         
 	proc_create("wmi-hotkey", 0, NULL, &hotkey_proc_fops);
 
-        if (!wmi_has_guid(wmi_event_guid)) {
+        if (!wmi_has_guid(EEEPC_WMI_EVENT_GUID)) {
 	    printk("No known WMI GUID found\n");
 	    return -ENODEV;
 	}
 
-	status = wmi_install_notify_handler(wmi_event_guid,
+	status = wmi_install_notify_handler(EEEPC_WMI_EVENT_GUID,
 					wmi_hotkey_notify, NULL);
 		if (ACPI_FAILURE(status)) {
 	    	
