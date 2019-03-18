@@ -58,7 +58,7 @@ static void wmi_hotkey_notify(u32 value, void *context)
 
 	if (obj && obj->type == ACPI_TYPE_INTEGER) {
 		code = obj->integer.value;
-
+                acpi_bus_generate_netlink_event("Netflix", "test",0,0);
 		snprintf(hotkey,5,"%d\n", code);
 	}
 
@@ -90,7 +90,7 @@ static int __init wmi_hotkey_start(void)
 static void __exit wmi_hotkey_end(void) 
 { 
         remove_proc_entry("wmi-hotkey",NULL);
-	wmi_remove_notify_handler(wmi_event_guid);
+	wmi_remove_notify_handler(EEEPC_WMI_EVENT_GUID);
 } 
 
 module_init(wmi_hotkey_start); 
